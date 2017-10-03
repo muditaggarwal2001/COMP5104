@@ -1,5 +1,6 @@
 package server;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -8,7 +9,8 @@ public class Course {
 	private int code;
 	private boolean HasFinal ;
 	private int CapSize;
-	private int pre[];
+	private boolean pre;
+	private List<Integer> prerequisite;
 	private int NAssignment; 	//No. of assignment
 	private int NMidterm;	//No. of mid terms
 	private int WeightOfAssignment[];
@@ -16,8 +18,12 @@ public class Course {
 	private int Wfinal;
 	private List<Assignmidmarks> s;	//Contains Student and it's marks in assignment, mid term and final.
 	
-	public Course(String name, int ccode, int size, int mid, int ass, int prereq )
+	public Course(String name, int ccode, int size, int mid, int ass, boolean p )
 	{
+		pre = p;
+		if(p==true)
+			prerequisite = new ArrayList<Integer>();
+		s = new ArrayList<Assignmidmarks>();
 		HasFinal = true;
 		title = name;
 		code = ccode;
@@ -85,6 +91,26 @@ public class Course {
 
 	public int WeightOfFinal() {
 		return Wfinal;
+	}
+	
+	public boolean isFull()
+	{
+		if(s.size()>=CapSize)
+			return true;
+		return false;
+	}
+	
+	public boolean hasPrequisites()
+	{
+		return pre;
+	}
+	
+	public List<Integer> Coursepreq(){
+		return prerequisite;
+	}
+
+	public void addPrerequisite(int nextInt) {
+		prerequisite.add(nextInt);
 	}
 	
 	

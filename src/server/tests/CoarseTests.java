@@ -1,12 +1,16 @@
 package server.tests;
 
 import static org.junit.Assert.*;
+
+import java.util.Iterator;
+import java.util.List;
+
 import org.junit.Test;
 
 import server.Course;
 
 public class CoarseTests {
-	Course c = new Course("OOSD",100000 , 26, 2, 4, 0);
+	Course c = new Course("OOSD",100000 , 26, 2, 4, true);
 	@Test
 	public void Titletest() {
 		assertEquals("OOSD", c.cTitle());
@@ -65,5 +69,22 @@ public class CoarseTests {
 				sum+= c.WeightOfFinal();
 		}
 		assertEquals(100, sum);
+	}
+	
+	@Test
+	public void PrereuisiteTest() {
+		if(c.hasPrequisites())
+		{
+			c.addPrerequisite(100001);
+			c.addPrerequisite(100002);
+		}
+		List<Integer> x = c.Coursepreq();
+		Iterator<Integer> i=x.iterator();
+		String list="";
+		while(i.hasNext())
+		{	list += i.next();
+			list += "\n";
+		}
+		assertEquals("100001\n100002\n", list);
 	}
 }
