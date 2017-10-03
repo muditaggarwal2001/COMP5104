@@ -51,4 +51,19 @@ public class CoarseTests {
 	public void AssignmentWeightTest2() {
 		assertEquals(0, c.AssignmentWeight(5));
 	}
+	
+	@Test
+	public void TotalWeightTest() {
+		int x=c.NoAssignment(),y=c.NumberMidTerm(),sum=0;
+		for(int i=0;i<x;i++)
+			sum+=c.AssignmentWeight(i);
+		for(int i=0;i<y;i++)
+			sum+=c.Midweight(i);
+		if(c.HasProject()==false)
+		{
+			if(c.HasFinalExam()==true)
+				sum+= c.WeightOfFinal();
+		}
+		assertEquals(100, sum);
+	}
 }

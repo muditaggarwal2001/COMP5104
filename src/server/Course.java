@@ -82,4 +82,10 @@ public class Course {
 		else 
 			return 0;
 	}
+
+	public int WeightOfFinal() {
+		return Wfinal;
+	}
+	
+	
 }
