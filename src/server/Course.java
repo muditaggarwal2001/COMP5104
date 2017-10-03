@@ -42,14 +42,44 @@ public class Course {
 	}
 
 	public String cTitle() {
-	
 		return title;
 	}
 
 	public int CourseCode() {
-		// TODO Auto-generated method stub
 		return code;
-	}	
+	}
+
+	public boolean HasFinalExam() {
+		return HasFinal;
+	}
+
+	public int ClassSize() {
+		return CapSize;
+	}
+
+	public boolean HasProject() {
+		return false;
+	}
+
+	public int NumberMidTerm() {
+		return NMidterm;
+	}
+
+	public int NoAssignment() {
+		return NAssignment;
+	}
 	
+	public int Midweight(int i) {
+		if(i<NMidterm)
+			return WeightOfmterm[i];
+		else
+			return 0;
+	}
 	
+	public int AssignmentWeight(int i) {
+		if(i<NAssignment)
+			return WeightOfAssignment[i];
+		else 
+			return 0;
+	}
 }
