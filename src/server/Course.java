@@ -45,8 +45,11 @@ public class Course {
 	
 		return title;
 	}
-	
-	
+
+	public int CourseCode() {
+		// TODO Auto-generated method stub
+		return code;
+	}	
 	
 	
 }
