@@ -14,5 +14,10 @@ public class CoarseTests {
 	public void Titletest() {
 		assertEquals("OOSD", c.cTitle());
 	}
-
+	
+	@Test
+	public void Codetest() {
+		assertEquals(100000, c.CourseCode());
+	}
+	
 }
