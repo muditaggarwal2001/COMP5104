@@ -31,8 +31,14 @@ public class Student {
 		return StudentNo;
 	}
 
-	public void RegisterCourses(int i) {
-		CurrentCourse.add(i);
+	public boolean RegisterCourses(int i) {
+		if(!CurrentCourse.contains(i))
+		{
+			CurrentCourse.add(i);
+			return true;
+		}
+		else
+			return false;
 	}
 
 	public List<Integer> getCurrentCourses() {
@@ -41,6 +47,16 @@ public class Student {
 
 	public List<Integer> getCompletedCourses() {
 		return CompletedCourse;
+	}
+
+	public boolean DeRegisterCourses(int i) {
+		if(CurrentCourse.contains(i))
+		{
+			CurrentCourse.remove((Object)i);
+			return true;
+		}
+		else
+			return false;
 	}
 	
 	

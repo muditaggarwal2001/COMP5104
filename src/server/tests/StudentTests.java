@@ -46,4 +46,25 @@ public class StudentTests {
 		assertEquals("", list);
 	}
 
+	@Test
+	public void RegisterCoursetest() {
+		assertEquals(true, s.RegisterCourses(100000));
+	}
+	
+	@Test
+	public void RegisterCoursetest2() {
+		assertEquals(true, s.RegisterCourses(100000));
+		assertEquals(false, s.RegisterCourses(100000));
+	}
+	
+	@Test
+	public void DeRegisterCoursetest() {
+		assertEquals(false, s.DeRegisterCourses(100000));
+	}
+	
+	@Test
+	public void DeRegisterCoursetest2() {
+		s.RegisterCourses(100000);
+		assertEquals(true, s.DeRegisterCourses(100000));
+	}
 }

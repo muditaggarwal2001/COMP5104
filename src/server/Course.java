@@ -1,6 +1,7 @@
 package server;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -16,14 +17,14 @@ public class Course {
 	private int WeightOfAssignment[];
 	private int WeightOfmterm[];
 	private int Wfinal;
-	private List<Assignmidmarks> s;	//Contains Student and it's marks in assignment, mid term and final.
+	private HashMap<Integer,Assignmidmarks> s;	//Contains Student and it's marks in assignment, mid term and final.
 	
 	public Course(String name, int ccode, int size, int mid, int ass, boolean p )
 	{
 		pre = p;
 		if(p==true)
 			prerequisite = new ArrayList<Integer>();
-		s = new ArrayList<Assignmidmarks>();
+		s = new HashMap<Integer,Assignmidmarks>();
 		HasFinal = true;
 		title = name;
 		code = ccode;
@@ -111,6 +112,27 @@ public class Course {
 
 	public void addPrerequisite(int nextInt) {
 		prerequisite.add(nextInt);
+	}
+
+	public boolean AddStudent(int i) {
+		if(!s.containsKey(i))
+		{
+			s.put(i, new Assignmidmarks(NAssignment, NMidterm, HasFinal));
+			return true;
+		}
+		else
+			return false;
+	
+	}
+
+	public boolean RemoveStudent(int i) {
+		if(s.containsKey(i))
+		{
+			s.remove(i);
+			return true;
+		}
+		else
+			return false;
 	}
 	
 	

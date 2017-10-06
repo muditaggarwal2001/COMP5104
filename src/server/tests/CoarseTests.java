@@ -87,4 +87,26 @@ public class CoarseTests {
 		}
 		assertEquals("100001\n100002\n", list);
 	}
+	
+	public void AddStudentTest() {
+		assertEquals(true, c.AddStudent(101087211));
+	}
+	@Test
+	public void AddStudentTest2() {
+		c.AddStudent(101087211);
+		assertEquals(false, c.AddStudent(101087211));
+		}
+	
+	@Test
+	public void RemoveStudentTest() {
+		assertEquals(false, c.RemoveStudent(101087211));
+		}
+	
+	@Test
+	public void RemoveStudentTest2() {
+		assertEquals(true, c.AddStudent(101087211));
+		assertEquals(true, c.RemoveStudent(101087211));
+		}
+	
+	
 }
