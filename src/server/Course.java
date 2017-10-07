@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 public class Course {
 	private String title;
 	private int code;
-	private boolean HasFinal ;
+	protected boolean HasFinal ;
 	private int CapSize;
 	private boolean pre;
 	private List<Integer> prerequisite;
@@ -16,8 +17,8 @@ public class Course {
 	private int NMidterm;	//No. of mid terms
 	private int WeightOfAssignment[];
 	private int WeightOfmterm[];
-	private int Wfinal;
-	private HashMap<Integer,Assignmidmarks> s;	//Contains Student and it's marks in assignment, mid term and final.
+	protected int Wfinal;
+	protected HashMap<Integer,Assignmidmarks> s;	//Contains Student and it's marks in assignment, mid term and final.
 	
 	public Course(String name, int ccode, int size, int mid, int ass, boolean p )
 	{
@@ -117,22 +118,74 @@ public class Course {
 	public boolean AddStudent(int i) {
 		if(!s.containsKey(i))
 		{
-			s.put(i, new Assignmidmarks(NAssignment, NMidterm, HasFinal));
+			s.put(i, new Assignmidmarks(NAssignment, NMidterm, HasFinal));	//If adding was successful return true 
 			return true;
 		}
 		else
-			return false;
+			return false;		//Already exists return false 
 	
 	}
 
 	public boolean RemoveStudent(int i) {
-		if(s.containsKey(i))
+		if(s.containsKey(i))			
 		{
 			s.remove(i);
-			return true;
+			return true;		//if removed return true 
 		}
 		else
-			return false;
+			return false;		//student not in course return false
+	}
+
+	public void setAssignmentMarks(int SNo, int Asno, int Marks) {
+			if(Marks>WeightOfAssignment[Asno])
+				s.get(SNo).setAssignmentMarks(Asno, WeightOfAssignment[Asno]);	//Calling set function of Assignmidmark class
+			else if(Marks<0)
+				s.get(SNo).setAssignmentMarks(Asno, 0);
+			else
+				s.get(SNo).setAssignmentMarks(Asno, Marks);
+	}
+
+	public void setMidTermMarks(int SNo, int Mno, int Marks) {
+		if(Marks>WeightOfmterm[Mno])
+			s.get(SNo).setMidTermMarks(Mno, WeightOfmterm[Mno]);	//Calling set function of Assignmidmark class
+		else if(Marks<0)
+			s.get(SNo).setMidTermMarks(Mno, 0);
+		else
+			s.get(SNo).setMidTermMarks(Mno, Marks);
+		
+	}
+
+	public void setFinalorProject(int Sno, int Marks) {
+		if(HasFinal==true)
+		{
+			if(Marks>Wfinal)
+				s.get(Sno).setFinalMarks(Wfinal);
+			else if(Marks<0)
+				s.get(Sno).setFinalMarks(0);
+			else
+				s.get(Sno).setFinalMarks(Marks);
+		}
+		
+	}
+
+	public int TotalStudentMarks(int key) {
+		int sum =0;
+		Assignmidmarks x = s.get(key);
+		for(int i=0;i<NAssignment;i++)
+			sum+=x.getAssignmentMarks(i);
+		for(int i=0;i<NMidterm;i++)
+			sum+=x.getMidMarks(i);
+		if(HasFinal==true)
+			sum+=x.getFinalMarks();
+		else
+			sum+=x.getProjectMarks();
+		return sum;
+	}
+	
+	public Set<Integer> getStudents()
+	{
+		Set<Integer> x=s.keySet();
+		return x;
 	}
 	
 	

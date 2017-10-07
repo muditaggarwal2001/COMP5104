@@ -22,5 +22,23 @@ public class ProjectCourseTests {
 			sum+=c.WeightOfProject();
 		assertEquals(100, sum);
 	}
+	
+	@Test
+	public void TotalStudentMarksTest() {
+		c.AddStudent(101087211);
+		int n=c.NoAssignment();
+		for(int i= 0;i<n;i++)
+		{
+			c.setAssignmentMarks(101087211,0,20);
+		}
+		n=c.NumberMidTerm();
+		for(int i= 0;i<n;i++)
+		{
+			c.setMidTermMarks(101087211,0,80);
+		}
+		
+		c.setFinalorProject(101087211,20);
+		assertEquals(true, c.TotalStudentMarks(101087211)<=100);
+	}
 
 }

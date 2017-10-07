@@ -11,6 +11,7 @@ import server.Course;
 
 public class CoarseTests {
 	Course c = new Course("OOSD",100000 , 26, 2, 4, true);
+
 	@Test
 	public void Titletest() {
 		assertEquals("OOSD", c.cTitle());
@@ -89,24 +90,43 @@ public class CoarseTests {
 	}
 	
 	public void AddStudentTest() {
-		assertEquals(true, c.AddStudent(101087211));
+		assertEquals(false, c.AddStudent(101087211));
 	}
 	@Test
 	public void AddStudentTest2() {
-		c.AddStudent(101087211);
-		assertEquals(false, c.AddStudent(101087211));
+		
+		assertEquals(true, c.AddStudent(101087211));
 		}
 	
 	@Test
 	public void RemoveStudentTest() {
-		assertEquals(false, c.RemoveStudent(101087211));
+		c.AddStudent(101087211);
+		assertEquals(true, c.RemoveStudent(101087211));
 		}
 	
 	@Test
 	public void RemoveStudentTest2() {
+		
 		assertEquals(true, c.AddStudent(101087211));
 		assertEquals(true, c.RemoveStudent(101087211));
 		}
 	
+	@Test
+	public void TotalStudentMaksTest() {
+		c.AddStudent(101087211);
+		int n=c.NoAssignment();
+		for(int i= 0;i<n;i++)
+		{
+			c.setAssignmentMarks(101087211,0,20);
+		}
+		n=c.NumberMidTerm();
+		for(int i= 0;i<n;i++)
+		{
+			c.setMidTermMarks(101087211,0,80);
+		}
+		
+		c.setFinalorProject(101087211,20);
+		assertEquals(true, c.TotalStudentMarks(101087211)<=100);
+		}
 	
 }
