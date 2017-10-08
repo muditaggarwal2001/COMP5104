@@ -10,7 +10,7 @@ import org.junit.Test;
 import server.Student;
 
 public class StudentTests {
-	Student s = new Student("Mudit", 101087211);
+	Student s = new Student("Mudit", 101087211,true);
 	@Test
 	public void Nametest() {
 		assertEquals("Mudit", s.getName());

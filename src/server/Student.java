@@ -10,12 +10,13 @@ public class Student {
 	private List<Integer> CurrentCourse;
 	private boolean FullTime;
 	
-	public Student(String sname, int sno)
+	public Student(String sname, int sno, boolean fulltime)
 	{
 		Name = sname;
 		StudentNo = sno;
 		CompletedCourse = new ArrayList<Integer>();
 		CurrentCourse = new ArrayList<Integer>();
+		FullTime = fulltime;
 	}
 	
 	public boolean isFullTime()
@@ -38,7 +39,7 @@ public class Student {
 			return true;
 		}
 		else
-			return false;
+			return false;		//already registered.
 	}
 
 	public List<Integer> getCurrentCourses() {
@@ -56,7 +57,7 @@ public class Student {
 			return true;
 		}
 		else
-			return false;
+			return false;		//Not registered
 	}
 	
 	
