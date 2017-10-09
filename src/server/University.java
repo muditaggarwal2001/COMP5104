@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 public class University {
 	private	List<Course> courses;	
@@ -13,6 +14,7 @@ public class University {
 	public University() {
 		courses = new ArrayList<Course>();
 		students = new HashMap<Integer,Student>();
+		counter = 0;
 	}
 
 	public String CreateCourse(String name, int code, int capsize) {
@@ -25,7 +27,7 @@ public class University {
 		while(i.hasNext())
 		{
 			x= i.next();
-			if(c.CourseCode()==x.CourseCode() || c.cTitle().equalsIgnoreCase(x.cTitle()))
+			if(code==x.CourseCode() || c.cTitle().equalsIgnoreCase(x.cTitle()))
 				return "Course Already Exist";
 		}
 		courses.add(c);
@@ -54,14 +56,22 @@ public class University {
 	}
 
 	public Course getCourse(int index) {
-		return courses.get(index);
+		int n = courses.size();
+		if(index>=0&&index<n)
+			return courses.get(index);
+		else
+			return null;
 	}
 	
 	public String RegisterStudent(int index, int st) {
 		Course course = courses.get(index);
 		if(course.isFull())
 			return "Course is Full";
-		if(students.get(st).RegisterCourses(course.CourseCode()))
+		Student s = students.get(st);
+		int n = s.getCurrentCourses().size();
+		if((s.isFullTime()&&!(n<config.MaxCourseforFT))||!(n<config.MaxCourseforPT))
+			return "Student course limit reached";
+		if(s.RegisterCourses(course.CourseCode()))
 		{	
 			course.AddStudent(st);
 			return  "Successful";
@@ -91,6 +101,51 @@ public class University {
 			return "Student Not Registered";
 			
 		}
+	}
+
+	public boolean CancelCourse(int index) {
+		Course course = courses.get(index);
+		Set<Integer> set= course.getStudents();
+		boolean flag=false;
+		int sno,code;
+		code = course.CourseCode();
+		Iterator<Integer> i=set.iterator();
+		if(i.hasNext())
+			flag = true;
+		while(i.hasNext())
+		{
+			sno = i.next();
+			students.get(sno).DeRegisterCourses(code);
+			i.remove();
+		}
+		return flag;
+	}
+
+	public void DestroyCourse(int index) {
+		CancelCourse(index);
+		courses.remove(index);
+	}
+
+	public Student getStudent(int s) {
+		if(students.containsKey(s))
+		{
+			return students.get(s);
+		}
+		return null;
+	}
+
+	public boolean DeleteStudent(int sno) {
+		if(students.containsKey(sno))
+		{
+			Iterator<Course> i = courses.iterator();
+			while(i.hasNext())
+			{
+				i.next().RemoveStudent(sno);
+			}
+			students.remove(sno);
+			return true;
+		}
+		return false;
 	}
 
 	
