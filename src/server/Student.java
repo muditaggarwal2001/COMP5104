@@ -33,13 +33,13 @@ public class Student {
 	}
 
 	public boolean RegisterCourses(int i) {
-		if(!CurrentCourse.contains(i))
-		{
-			CurrentCourse.add(i);
-			return true;
-		}
-		else
-			return false;		//already registered.
+			if(!CurrentCourse.contains(i))
+			{
+				CurrentCourse.add(i);
+				return true;
+			}
+			else
+				return false;		//already registered.
 	}
 
 	public List<Integer> getCurrentCourses() {
