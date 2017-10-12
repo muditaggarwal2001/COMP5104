@@ -1,6 +1,12 @@
 package server;
 
-public class Assignmidmarks {
+import java.io.Serializable;
+
+public class Assignmidmarks implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int Assignment[];
 	private int midTerm[];
 	private int finalExam;
