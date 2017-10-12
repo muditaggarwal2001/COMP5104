@@ -1,12 +1,20 @@
 package server;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-public class Course {
+import org.apache.log4j.Logger;
+
+public class Course implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public static Logger logger = Trace.getInstance().getLogger(server.class);
 	private String title;
 	private int code;
 	protected boolean HasFinal ;
@@ -22,6 +30,7 @@ public class Course {
 	
 	public Course(String name, int ccode, int size, int mid, int ass, boolean p )
 	{
+		logger.info("Course object created");		
 		pre = p;
 		if(p==true)
 			prerequisite = new ArrayList<Integer>();
@@ -96,7 +105,7 @@ public class Course {
 	}
 	
 	public boolean isFull()
-	{
+	{	logger.info("Checking Course is full or not");
 		if(s.size()>=CapSize)
 			return true;
 		return false;
@@ -116,6 +125,7 @@ public class Course {
 	}
 
 	public boolean AddStudent(int i) {
+		logger.info("Course class add student method invoked");
 		if(!s.containsKey(i))
 		{
 			s.put(i, new Assignmidmarks(NAssignment, NMidterm, HasFinal));	//If adding was successful return true 
@@ -127,6 +137,7 @@ public class Course {
 	}
 
 	public boolean RemoveStudent(int i) {
+		logger.info("Course class Remove student method invoked");
 		if(s.containsKey(i))			
 		{
 			s.remove(i);
@@ -184,6 +195,7 @@ public class Course {
 	
 	public Set<Integer> getStudents()
 	{
+		logger.info("Getting student registered in course");
 		Set<Integer> x=s.keySet();
 		return x;
 	}

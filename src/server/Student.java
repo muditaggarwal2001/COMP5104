@@ -1,14 +1,22 @@
 package server;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Student {
+import org.apache.log4j.Logger;
+
+public class Student implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String Name;
 	private int StudentNo;
 	private List<Integer> CompletedCourse;
 	private List<Integer> CurrentCourse;
 	private boolean FullTime;
+	static Logger logger = Trace.getInstance().getLogger(Student.class);
 	
 	public Student(String sname, int sno, boolean fulltime)
 	{
@@ -33,6 +41,7 @@ public class Student {
 	}
 
 	public boolean RegisterCourses(int i) {
+			logger.info("Student Register Course methode invoked");
 			if(!CurrentCourse.contains(i))
 			{
 				CurrentCourse.add(i);
@@ -51,6 +60,7 @@ public class Student {
 	}
 
 	public boolean DeRegisterCourses(int i) {
+		logger.info("Student DeRegister Course methode invoked");
 		if(CurrentCourse.contains(i))
 		{
 			CurrentCourse.remove((Object)i);

@@ -1,5 +1,6 @@
 package server;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -7,7 +8,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-public class University {
+public class University implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private	List<Course> courses;	
 	private	HashMap<Integer,Student> students;
 	int counter;
@@ -134,6 +139,11 @@ public class University {
 		return null;
 	}
 
+	public Set<Integer> getStudents()
+	{
+		return students.keySet();
+	}
+	
 	public boolean DeleteStudent(int sno) {
 		if(students.containsKey(sno))
 		{
