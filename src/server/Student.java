@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 public class Student implements Serializable{
 	/**
 	 * 
@@ -14,6 +16,7 @@ public class Student implements Serializable{
 	private List<Integer> CompletedCourse;
 	private List<Integer> CurrentCourse;
 	private boolean FullTime;
+	static Logger logger = Trace.getInstance().getLogger(Student.class);
 	
 	public Student(String sname, int sno, boolean fulltime)
 	{
@@ -38,6 +41,7 @@ public class Student implements Serializable{
 	}
 
 	public boolean RegisterCourses(int i) {
+			logger.info("Student Register Course methode invoked");
 			if(!CurrentCourse.contains(i))
 			{
 				CurrentCourse.add(i);
@@ -56,6 +60,7 @@ public class Student implements Serializable{
 	}
 
 	public boolean DeRegisterCourses(int i) {
+		logger.info("Student DeRegister Course methode invoked");
 		if(CurrentCourse.contains(i))
 		{
 			CurrentCourse.remove((Object)i);

@@ -1,0 +1,30 @@
+2017-10-12 16:06:28 INFO  server:54 - Reading Existing Database
+@2017-10-12 16:06:37 INFO  server:70 - Socket[addr=/127.0.0.1,port=53399,localport=5000] Connected to the Server
+@2017-10-12 16:06:43 INFO  server:40 - Clerk Socket[addr=/127.0.0.1,port=53399,localport=5000] connected to the Server
+@2017-10-12 16:06:47 INFO  server:46 - Clerk is Trying to create course
+@2017-10-12 16:07:57 INFO  server:64 - Successfully Created
+
+@2017-10-12 16:08:02 INFO  server:40 - Clerk Socket[addr=/127.0.0.1,port=53399,localport=5000] connected to the Server
+@2017-10-12 16:08:05 INFO  server:67 - Clerk is Trying to create Student
+@2017-10-12 16:08:13 INFO  server:79 - Student with Student no 3 Successfully Created
+
+@2017-10-12 16:08:25 INFO  server:70 - Socket[addr=/127.0.0.1,port=53405,localport=5000] Connected to the Server
+@2017-10-12 16:08:27 INFO  server:97 - All the Changes reflected to the Database
+@2017-10-12 16:15:53 INFO  Class:53 - Reading Existing Database
+@2017-10-12 16:16:00 INFO  Class:69 - Socket[addr=/127.0.0.1,port=53446,localport=5000] Connected to the Server
+@2017-10-12 16:16:04 INFO  Class:39 - Clerk Socket[addr=/127.0.0.1,port=53446,localport=5000] connected to the Server
+@2017-10-12 16:16:09 INFO  Class:66 - Clerk is Trying to create Student
+@2017-10-12 16:16:18 INFO  Class:78 - Student with Student no 4 Successfully Created
+
+@2017-10-12 16:17:00 INFO  Class:69 - Socket[addr=/127.0.0.1,port=53449,localport=5000] Connected to the Server
+@2017-10-12 16:17:04 INFO  Class:156 - Student Socket[addr=/127.0.0.1,port=53449,localport=5000] connected to the Server
+@2017-10-12 16:17:13 INFO  Class:179 - Student is Trying to Register in Course
+@2017-10-12 16:17:17 INFO  Class:198 - Successful
+
+@2017-10-12 16:17:21 INFO  Class:156 - Student Socket[addr=/127.0.0.1,port=53449,localport=5000] connected to the Server
+@2017-10-12 16:17:27 INFO  Class:179 - Student is Trying to Register in Course
+@2017-10-12 16:17:32 INFO  Class:198 - Successful
+
+@2017-10-12 16:17:40 INFO  Class:69 - Socket[addr=/127.0.0.1,port=53451,localport=5000] Connected to the Server
+@2017-10-12 16:17:42 INFO  Class:96 - All the Changes reflected to the Database
+@

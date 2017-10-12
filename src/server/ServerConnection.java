@@ -8,7 +8,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 public class ServerConnection extends Thread{
+	public static Logger logger = Trace.getInstance().getLogger(server.class);
 	University university;
 	String actor;
 	DataInputStream din;
@@ -29,15 +32,17 @@ public class ServerConnection extends Thread{
 			String c="yes",c1;
 			int actionChoice;
 		if(actor.equalsIgnoreCase("clerk"))
-		{
+		{	
 			do
 			{
+				logger.info("Clerk "+socket+" connected to the Server");
 				String O="";
 				String output="";
 				dout.writeUTF("Enter your choice:\n1.Create course\n2.Create Student\n3.Cancel Course\n4.Destroy Course\n5.Delete Student\nEnter choice number:");
 				actionChoice = Integer.parseInt(din.readUTF());
 				switch (actionChoice) {
-				case 1:	dout.writeUTF("Enter Course name");
+				case 1:	logger.info("Clerk is Trying to create course");
+						dout.writeUTF("Enter Course name");
 						String name = din.readUTF();
 						dout.writeUTF("Enter Course code");
 						int code = Integer.parseInt(din.readUTF());
@@ -54,9 +59,11 @@ public class ServerConnection extends Thread{
 							csize = Integer.parseInt(din.readUTF());
 						}
 						O=university.CreateCourse(name, code, csize)+"\n";
+						logger.info(O);
 					break;
 
-				case 2:	dout.writeUTF("Enter Student name");
+				case 2:	logger.info("Clerk is Trying to create Student");
+						dout.writeUTF("Enter Student name");
 						name = din.readUTF();
 						int x=-1;
 						dout.writeUTF("Is Student Full time : true or False");
@@ -67,9 +74,11 @@ public class ServerConnection extends Thread{
 							x=university.CreateStudent(name, false);
 						if(x!=-1)
 							O+="Student with Student no "+x+" Successfully Created\n";
+						logger.info(O);
 						break;
 						
-				case 3:	List<Course> course=university.getCourses();
+				case 3:	logger.info("Clerk is Trying to cancel course");
+						List<Course> course=university.getCourses();
 						Iterator<Course> i = course.iterator();
 						
 						int index = 0;
@@ -89,9 +98,11 @@ public class ServerConnection extends Thread{
 							O+="Course Cancelled Successfully\n";
 						else
 							O+="Course had No Students\n";
+						logger.info(O);
 						break;
 						
-				case 4:	course=university.getCourses();
+				case 4:	logger.info("Clerk is Trying to Destroy course");
+						course=university.getCourses();
 						i = course.iterator();
 						index = 0;
 						while(i.hasNext())
@@ -108,9 +119,11 @@ public class ServerConnection extends Thread{
 						}
 						university.DestroyCourse(j-1);
 						O+="Course Destroyed Successfully\n";
+						logger.info(O);
 						break;
 		
-				case 5:	Set<Integer> set = university.getStudents();
+				case 5:	
+						Set<Integer> set = university.getStudents();
 						Iterator<Integer> iset = set.iterator();
 						while(iset.hasNext())
 						{
@@ -119,13 +132,16 @@ public class ServerConnection extends Thread{
 						output+="Enter Student number to be deleted\n";
 						dout.writeUTF(output);
 						j = Integer.parseInt(din.readUTF());
+						logger.info("Clerk is Trying to Delete student " +j);
 						if(university.DeleteStudent(j))
 							O+="Student Deleted Successfully\n";
 						else
 							O+="You have entered wrong Student number\n";
+						logger.info(O);
 						break;
 				default:	O+="You have Entered wrong choice\n";
-							break;
+							logger.info("Clerk Entered wrong choice");	
+						break;
 				}
 				dout.writeUTF(O+"Do you want to continue: yes or no");
 				c1 = din.readUTF();
@@ -136,6 +152,7 @@ public class ServerConnection extends Thread{
 		{
 			do
 			{
+				logger.info("Student "+socket+" connected to the Server");
 				int index=0;
 				Student student = null;
 				while(student==null)
@@ -158,7 +175,8 @@ public class ServerConnection extends Thread{
 				dout.writeUTF("Enter your choice:\n1.Register course\n2.Deregister Course");
 				actionChoice = Integer.parseInt(din.readUTF());
 				switch (actionChoice) {
-				case 1:	List<Course> course=university.getCourses();
+				case 1:	logger.info("Student is Trying to Register in Course");
+						List<Course> course=university.getCourses();
 						Iterator<Course> i = course.iterator();
 						int ind = 0;
 						while(i.hasNext())
@@ -176,9 +194,11 @@ public class ServerConnection extends Thread{
 						
 						O=university.RegisterStudent(j-1, index);
 						O+="\n";
+						logger.info(O);
 						break;
 
-				case 2: List<Integer> list=student.getCurrentCourses();
+				case 2: logger.info("Student is Trying to Deregister from course");
+						List<Integer> list=student.getCurrentCourses();
 						Iterator<Integer> iterator = list.iterator();
 						while(iterator.hasNext())
 						{
@@ -189,8 +209,10 @@ public class ServerConnection extends Thread{
 						int code = Integer.parseInt(din.readUTF());
 						O+=university.DeregisterStudent(index, code);
 						O+="\n";
+						logger.info(O);
 						break;
 				default:	O+="You have Entered wrong choice\n";
+							logger.info("(Student) "+O);
 							break;
 				}
 				dout.writeUTF(O+"Do you want to continue: yes or no");
