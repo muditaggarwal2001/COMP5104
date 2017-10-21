@@ -1,6 +1,12 @@
 package server;
 
+import java.util.Random;
+
 public class ProjectCourse extends Course {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int ProjectWeight;
 	public ProjectCourse(String name, int ccode, int size, int mid, int ass, boolean p) {
 		super(name, ccode, size, mid, ass, p);
@@ -25,7 +31,8 @@ public class ProjectCourse extends Course {
 	}
 	
 	public void setFinalorProject(int Sno, int Marks) {
-		
+		Random rand = new Random();
+		Marks = rand.nextInt(ProjectWeight)+1;
 			if(Marks>ProjectWeight)
 				s.get(Sno).setProjectMarks(ProjectWeight);
 			else if(Marks<0)

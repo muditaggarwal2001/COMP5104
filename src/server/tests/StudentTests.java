@@ -2,6 +2,7 @@ package server.tests;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,8 +37,8 @@ public class StudentTests {
 
 	@Test
 	public void CompletedCoursestest() {
-		List<Integer> x = s.getCompletedCourses();
-		Iterator<Integer> i=x.iterator();
+		HashMap<Integer, Integer> x = s.getCompletedCourses();
+		Iterator<Integer> i=x.keySet().iterator();
 		String list="";
 		while(i.hasNext())
 		{	list += i.next();
@@ -66,5 +67,35 @@ public class StudentTests {
 	public void DeRegisterCoursetest2() {
 		s.RegisterCourses(100000);
 		assertEquals(true, s.DeRegisterCourses(100000));
+	}
+	
+	@Test
+	public void AddDropCoursestest() {
+		assertEquals(false, s.DropCourses(100000));
+	}
+	
+	@Test
+	public void AddDropCoursestest2() {
+		s.RegisterCourses(100000);
+		assertEquals(true, s.DropCourses(100000));
+	}
+	
+	@Test
+	public void getDropCoursestest() {
+		s.RegisterCourses(100000);
+		s.DropCourses(100000);
+		assertEquals(1, s.getDropCourses().size());
+	}
+
+	@Test
+	public void CompletedCoursestest2() {
+		s.RegisterCourses(100000);
+		assertEquals(true, s.completeCourse(100000,90));
+	}
+	
+	@Test
+	public void CompletedCoursestest3() {
+		s.RegisterCourses(100000);
+		assertEquals(false, s.completeCourse(100001,90));
 	}
 }
