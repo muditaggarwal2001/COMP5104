@@ -1,8 +1,14 @@
 package server.tests;
 
 import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+
 import org.junit.Test;
 
+import server.ClerkAllower;
 import server.Course;
 import server.Student;
 import server.University;
@@ -169,5 +175,118 @@ public class UniversityTests {
 		u.RegisterStudent(0,s);
 		u.DeleteStudent(s);
 		assertEquals(false,u.getCourse(0).getStudents().contains(s));
+	}
+	
+	@Test
+	public void CheckClerktest() {
+		assertEquals(true, u.getClerkAllowed());
+	}
+	
+	@Test
+	public void CheckClerktest2() {
+		u.setClerkAllowed(false);
+		assertEquals(false, u.getClerkAllowed());
+	}
+	
+	@Test
+	public void CheckClerktest3() {
+		List<University> list = new ArrayList<>();
+		list.add(u);
+		Timer time = new Timer(true);
+		time.schedule(new ClerkAllower(list, false), 0);
+		try {
+			Thread.sleep(5);
+		} catch (InterruptedException e) {
+				e.printStackTrace();
+		}
+		assertEquals(false, u.getClerkAllowed());
+	}
+	
+	@Test
+	public void StudentRegistrationAllowancetest() {
+		assertEquals(false, u.getStudentAllowed());
+	}
+	
+	@Test
+	public void StudentRegistrationAllowancetest2() {
+		u.setStudentAllowed(true);
+		assertEquals(true, u.getStudentAllowed());
+	}
+	
+	@Test
+	public void StudentRegistrationAllowancetest3() {
+		List<University> list = new ArrayList<>();
+		list.add(u);
+		Timer time = new Timer(true);
+		time.schedule(new ClerkAllower(list, false), 0);
+		try {
+			Thread.sleep(5);
+		} catch (InterruptedException e) {
+				e.printStackTrace();
+		}
+		assertEquals(true, u.getStudentAllowed());
+	
+	}
+	
+	@Test
+	public void StudentRegistrationAllowancetest4() {
+		List<University> list = new ArrayList<>();
+		list.add(u);
+		Timer time = new Timer(true);
+		time.schedule(new ClerkAllower(list, true), 0);
+		try {
+			Thread.sleep(5);
+		} catch (InterruptedException e) {
+				e.printStackTrace();
+		}
+		assertEquals(false, u.getStudentAllowed());
+	
+	}
+	
+	@Test
+	public void DropCourseDeadlinetest() {
+		assertEquals(false, u.getDropDeadline());
+	}
+	
+	@Test
+	public void DropCourseDeadlinetest2() {
+		u.setDropDeadline(true);
+		assertEquals(true, u.getDropDeadline());
+	}
+	
+	@Test
+	public void DropCourseDeadlinetest3() {
+		u.CreateCourse("OOSD",100000,26);
+		int s=u.CreateStudent("Mudit Aggarwal",true);
+		u.RegisterStudent(0,s);
+		u.setDropDeadline(true);
+		assertEquals("Course Successfully Dropped", u.Dropcourse(s,100000));
+	}
+	
+	@Test
+	public void DropCourseDeadlinetest4() {
+		u.CreateCourse("OOSD",100000,26);
+		int s=u.CreateStudent("Mudit Aggarwal",true);
+		u.setDropDeadline(true);
+		assertEquals("Student Not Registered", u.Dropcourse(s,100000));
+	}
+	
+	@Test
+	public void DropCourseDeadlinetest5() {
+		u.CreateCourse("OOSD",100000,26);
+		int s=u.CreateStudent("Mudit Aggarwal",true);
+		u.setDropDeadline(true);
+		assertEquals("Course does not exist", u.Dropcourse(s,100001));
+	}
+	
+	@Test
+	public void getTermEndtest() {
+		assertEquals(false, u.getTermEnd());
+	}
+	
+	@Test
+	public void getTermEndtest2() {
+		u.setTermEnd(true);
+		assertEquals(true, u.getTermEnd());
 	}
 }

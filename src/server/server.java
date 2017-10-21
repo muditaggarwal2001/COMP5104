@@ -1,6 +1,5 @@
 package server;
 
-import java.beans.PropertyChangeEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -14,9 +13,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
+import java.util.Timer;
 
+import org.apache.log4j.Logger;
 
 public class server {
 	public static Logger logger = Trace.getInstance().getLogger(server.class);
@@ -25,6 +24,7 @@ public class server {
 	public static void main(String[] args) {
 		String f = "file.txt";
 		University u;
+		Timer time = new Timer(true);
 		List<University> list = null;
 		ObjectInputStream fin;
 		ObjectOutputStream fout;
@@ -64,17 +64,20 @@ public class server {
 		try {
 			String x;
 			server =  new ServerSocket(5000);
+			time.schedule(new ClerkAllower(list, false), config.clerktime);
+			time.schedule(new DCDeadline(list, true), config.RegisterDeadline);
+			time.schedule(new TermEndEvent(list,true), config.Termend);
 			while(avail)
 			{
 				client =  server.accept();
 				logger.info(client+" Connected to the Server");
 				din = new DataInputStream(client.getInputStream());
 				dout = new DataOutputStream(client.getOutputStream());
-				dout.writeUTF("Welcome To JP University\nEnter your Designation:\n1.clerk\n2.student");
+				dout.writeUTF("Welcome To JP University\nEnter your Designation:\n1.clerk\n2.student\n3.Enter exit to Terminate");
 				x= din.readUTF();
 				while(!(x.equalsIgnoreCase("exit")||x.equalsIgnoreCase("clerk")||x.equalsIgnoreCase("student")))
 				{
-					dout.writeUTF("You have entered wrong designation\nEnter your Designation:\n1.clerk\n2.student");
+					dout.writeUTF("You have entered wrong designation\nEnter your Designation:\n1.clerk\n2.student\n3.Enter exit to Terminate");
 					x=din.readUTF();
 					logger.info("User entered wrong Designation");
 				}
@@ -88,6 +91,10 @@ public class server {
 			dout.close();
 			client.close();
 			server.close();
+			time.schedule(new ClerkAllower(list, true),0);
+			time.schedule(new DCDeadline(list, false), 0);
+			time.schedule(new TermEndEvent(list,false), 0);
+			Thread.sleep(10);
 			FileOutputStream fo = new FileOutputStream(file);
 			fout = new ObjectOutputStream(fo);
 			fout.writeObject(list);
@@ -97,6 +104,9 @@ public class server {
 			logger.info("All the Changes reflected to the Database");
 		} catch (IOException e) {
 			logger.error("Client server IO error - "+e);
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			logger.error("Server main Thread Error while putting it to sleep - "+e);
 			e.printStackTrace();
 		}
 	}

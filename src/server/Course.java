@@ -167,6 +167,8 @@ public class Course implements Serializable {
 	}
 
 	public void setFinalorProject(int Sno, int Marks) {
+		Random rand = new Random();
+		Marks = rand.nextInt(Wfinal)+1;
 		if(HasFinal==true)
 		{
 			if(Marks>Wfinal)
@@ -200,5 +202,23 @@ public class Course implements Serializable {
 		return x;
 	}
 	
+	public void setMarks()
+	{
+		Random rand = new Random();
+		Set<Integer> x =s.keySet();
+		for(int i : x)
+		{
+			for(int ano=0;ano<NAssignment;ano++)
+			{
+				setAssignmentMarks(i, ano, rand.nextInt(WeightOfAssignment[ano])+1);
+			}
+			for(int mno=0;mno<NMidterm;mno++)
+			{
+				setAssignmentMarks(i, mno, rand.nextInt(WeightOfmterm[mno])+1);
+			}
+			setFinalorProject(i, 0);
+		}
+		
+	}
 	
 }

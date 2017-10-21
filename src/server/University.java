@@ -15,11 +15,19 @@ public class University implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private	List<Course> courses;	
 	private	HashMap<Integer,Student> students;
+	private boolean ClerkAllowed;
+	private boolean StudentAllowed;
+	private boolean Dropdeadline;
+	private boolean Termend;
 	int counter;
 	public University() {
 		courses = new ArrayList<Course>();
 		students = new HashMap<Integer,Student>();
 		counter = 0;
+		ClerkAllowed = true;
+		StudentAllowed = false;
+		Dropdeadline = false;
+		Termend =false;
 	}
 
 	public String CreateCourse(String name, int code, int capsize) {
@@ -74,7 +82,7 @@ public class University implements Serializable {
 			return "Course is Full";
 		Student s = students.get(st);
 		int n = s.getCurrentCourses().size();
-		if((s.isFullTime()&&!(n<config.MaxCourseforFT))||!(n<config.MaxCourseforPT))
+		if((s.isFullTime()&&!(n<config.MaxCourseforFT))||(!s.isFullTime()&&!(n<config.MaxCourseforPT)))
 			return "Student course limit reached";
 		if(s.RegisterCourses(course.CourseCode()))
 		{	
@@ -98,7 +106,7 @@ public class University implements Serializable {
 		 return "Course does not exist";
 		else
 		{	
-			if(students.get(sno).DeRegisterCourses(ccode))
+			 if(students.get(sno).DeRegisterCourses(ccode))
 			{
 				c.RemoveStudent(sno);
 				return "Successfully Deregistered";
@@ -108,6 +116,31 @@ public class University implements Serializable {
 		}
 	}
 
+	public String Dropcourse(int sno, int ccode) {
+		Course c=null;
+		Iterator<Course> i = courses.iterator();
+		while(i.hasNext())
+		{
+			c = i.next();
+			if(c.CourseCode()==ccode)
+				break;
+			c = null;
+		}
+		if(c==null)
+		 return "Course does not exist";
+		else
+		{	
+				if(students.get(sno).DropCourses(ccode))
+				{
+					c.RemoveStudent(sno);
+					return "Course Successfully Dropped";
+				}
+			return "Student Not Registered";
+			
+		}
+	}
+
+	
 	public boolean CancelCourse(int index) {
 		Course course = courses.get(index);
 		Set<Integer> set= course.getStudents();
@@ -158,5 +191,36 @@ public class University implements Serializable {
 		return false;
 	}
 
-	
+	public boolean getClerkAllowed() {
+		return ClerkAllowed;
+	}
+
+	public void setClerkAllowed(boolean b) {
+		ClerkAllowed = b;
+	}
+
+	public boolean getStudentAllowed() {
+		return StudentAllowed;
+	}
+
+	public void setStudentAllowed(boolean b) {
+		StudentAllowed=b;
+	}
+
+	public boolean getDropDeadline() {
+		return Dropdeadline;
+	}
+
+	public void setDropDeadline(boolean b) {
+		Dropdeadline = b;
+	}
+
+	public boolean getTermEnd() {
+		return Termend;
+	}
+
+	public void setTermEnd(boolean b) {
+		Termend = b;
+	}
+
 }

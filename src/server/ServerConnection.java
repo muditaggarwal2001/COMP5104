@@ -4,10 +4,10 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
 import org.apache.log4j.Logger;
 
 public class ServerConnection extends Thread{
@@ -41,7 +41,13 @@ public class ServerConnection extends Thread{
 				dout.writeUTF("Enter your choice:\n1.Create course\n2.Create Student\n3.Cancel Course\n4.Destroy Course\n5.Delete Student\nEnter choice number:");
 				actionChoice = Integer.parseInt(din.readUTF());
 				switch (actionChoice) {
-				case 1:	logger.info("Clerk is Trying to create course");
+				case 1:	if(!university.getClerkAllowed())
+						{
+							O+="Clerk's time to Create Course and student is over\n";
+							logger.info(O);
+							break;
+						}
+						logger.info("Clerk is Trying to create course");
 						dout.writeUTF("Enter Course name");
 						String name = din.readUTF();
 						dout.writeUTF("Enter Course code");
@@ -62,7 +68,13 @@ public class ServerConnection extends Thread{
 						logger.info(O);
 					break;
 
-				case 2:	logger.info("Clerk is Trying to create Student");
+				case 2:	if(!university.getClerkAllowed())
+						{		
+							O+="Clerk's time to Create Course and student is over\n";
+							logger.info(O);
+							break;
+						}
+						logger.info("Clerk is Trying to create Student");
 						dout.writeUTF("Enter Student name");
 						name = din.readUTF();
 						int x=-1;
@@ -150,9 +162,17 @@ public class ServerConnection extends Thread{
 		}
 		else if(actor.equalsIgnoreCase("student"))
 		{
+			logger.info("Student "+socket+" connected to the Server");
 			do
 			{
-				logger.info("Student "+socket+" connected to the Server");
+				
+				if(!university.getStudentAllowed())
+				{
+					dout.writeUTF("Student Registeration are not open right now.\nDo you want to continue: yes or no");
+					c1 = din.readUTF();
+					continue;
+				}
+				
 				int index=0;
 				Student student = null;
 				while(student==null)
@@ -170,12 +190,36 @@ public class ServerConnection extends Thread{
 				if(student == null)
 					break;
 				
+				if(university.getTermEnd())
+				{
+					String x="Course	Marks\n";
+					HashMap<Integer, Integer> b=student.getCompletedCourses();
+					Set<Integer> set = b.keySet();
+					for(int i:set)
+					{
+						x+=i+"	"+b.get(i)+"\n";
+					}
+					List<Integer> list =student.getDropCourses();
+					for(int i:list)
+					{
+						x+=i+"	Dropped\n";
+					}
+					dout.writeUTF("Term has ended.\nYour Transcript: \n"+x+"\nDo you want to continue: yes or no");
+					c1 = din.readUTF();
+					continue;
+				}
 				String O="";
 				String output="";
 				dout.writeUTF("Enter your choice:\n1.Register course\n2.Deregister Course");
 				actionChoice = Integer.parseInt(din.readUTF());
 				switch (actionChoice) {
-				case 1:	logger.info("Student is Trying to Register in Course");
+				case 1:	
+						logger.info("Student is Trying to Register in Course");
+						if(university.getDropDeadline())
+						{
+							O+="Registeration Deadlines Passed\n";
+							break;
+						}
 						List<Course> course=university.getCourses();
 						Iterator<Course> i = course.iterator();
 						int ind = 0;
@@ -207,6 +251,16 @@ public class ServerConnection extends Thread{
 						output+="Enter the Course no you want to Deregister\n";
 						dout.writeUTF(output);
 						int code = Integer.parseInt(din.readUTF());
+						if(university.getDropDeadline())
+						{
+							dout.writeUTF("Deregister Deadline is passed \n Now course will be Dropped:Do you want to continue Y/n \n");
+							if(din.readUTF().equalsIgnoreCase("n"))
+								break;
+							O+=university.Dropcourse(index, code);
+							O+="\n";
+							logger.info(O);
+							break;
+						}
 						O+=university.DeregisterStudent(index, code);
 						O+="\n";
 						logger.info(O);
