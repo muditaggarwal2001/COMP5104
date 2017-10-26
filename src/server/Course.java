@@ -214,7 +214,7 @@ public class Course implements Serializable {
 			}
 			for(int mno=0;mno<NMidterm;mno++)
 			{
-				setAssignmentMarks(i, mno, rand.nextInt(WeightOfmterm[mno])+1);
+				setMidTermMarks(i, mno, rand.nextInt(WeightOfmterm[mno])+1);
 			}
 			setFinalorProject(i, 0);
 		}
