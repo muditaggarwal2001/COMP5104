@@ -38,11 +38,11 @@ public class ServerConnection extends Thread{
 				logger.info("Clerk "+socket+" connected to the Server");
 				String O="";
 				String output="";
-				dout.writeUTF("Enter your choice:\n1.Create course\n2.Create Student\n3.Cancel Course\n4.Destroy Course\n5.Delete Student\nEnter choice number:");
+				dout.writeUTF("Enter your choice:\n1.Create course\n2.Create Student\n3.Cancel Course\n4.Destroy Course\n5.Delete Student\n6.List Courses offered\n7.List Current Students\nEnter choice number:");
 				actionChoice = Integer.parseInt(din.readUTF());
 				switch (actionChoice) {
 				case 1:	if(!university.getClerkAllowed())
-						{
+						{		
 							O+="Clerk's time to Create Course and student is over\n";
 							logger.info(O);
 							break;
@@ -86,6 +86,8 @@ public class ServerConnection extends Thread{
 							x=university.CreateStudent(name, false);
 						if(x!=-1)
 							O+="Student with Student no "+x+" Successfully Created\n";
+						else
+							O+="Clerk's time to Create Course and student is over\n";
 						logger.info(O);
 						break;
 						
@@ -151,6 +153,22 @@ public class ServerConnection extends Thread{
 							O+="You have entered wrong Student number\n";
 						logger.info(O);
 						break;
+				case 6: logger.info("Clerk is getting courses offered");
+						course=university.getCourses();
+						i = course.iterator();
+						index = 0;
+						while(i.hasNext())
+						{	index++;
+							O+=index+i.next().cTitle()+"\n";
+						}
+						break;
+				case 7: set = university.getStudents();
+						iset = set.iterator();
+						while(iset.hasNext())
+						{
+							O+=iset.next()+"\n";
+						}
+						break;
 				default:	O+="You have Entered wrong choice\n";
 							logger.info("Clerk Entered wrong choice");	
 						break;
@@ -192,7 +210,7 @@ public class ServerConnection extends Thread{
 				
 				if(university.getTermEnd())
 				{
-					String x="Course	Marks\n";
+					String x="Course Marks\n";
 					HashMap<Integer, Integer> b=student.getCompletedCourses();
 					Set<Integer> set = b.keySet();
 					for(int i:set)
@@ -210,7 +228,7 @@ public class ServerConnection extends Thread{
 				}
 				String O="";
 				String output="";
-				dout.writeUTF("Enter your choice:\n1.Register course\n2.Deregister Course");
+				dout.writeUTF("Enter your choice:\n1.Register course\n2.Deregister Course\n3.Registered Courses");
 				actionChoice = Integer.parseInt(din.readUTF());
 				switch (actionChoice) {
 				case 1:	
@@ -243,28 +261,45 @@ public class ServerConnection extends Thread{
 
 				case 2: logger.info("Student is Trying to Deregister from course");
 						List<Integer> list=student.getCurrentCourses();
-						Iterator<Integer> iterator = list.iterator();
-						while(iterator.hasNext())
-						{
-							output+=iterator.next()+"\n";
-						}
-						output+="Enter the Course no you want to Deregister\n";
-						dout.writeUTF(output);
-						int code = Integer.parseInt(din.readUTF());
-						if(university.getDropDeadline())
-						{
-							dout.writeUTF("Deregister Deadline is passed \n Now course will be Dropped:Do you want to continue Y/n \n");
-							if(din.readUTF().equalsIgnoreCase("n"))
+						if(!list.isEmpty())
+						{	Iterator<Integer> iterator = list.iterator();
+							while(iterator.hasNext())
+							{
+								output+=iterator.next()+"\n";
+							}
+							output+="Enter the Course no you want to Deregister\n";
+							dout.writeUTF(output);
+							int code = Integer.parseInt(din.readUTF());
+							if(university.getDropDeadline())
+							{
+								dout.writeUTF("Deregister Deadline is passed \n Now course will be Dropped:Do you want to continue Y/n \n");
+								if(din.readUTF().equalsIgnoreCase("n"))
+									break;
+								O+=university.Dropcourse(index, code);
+								O+="\n";
+								logger.info(O);
 								break;
-							O+=university.Dropcourse(index, code);
+							}
+							O+=university.DeregisterStudent(index, code);
 							O+="\n";
-							logger.info(O);
-							break;
 						}
-						O+=university.DeregisterStudent(index, code);
-						O+="\n";
+						else
+							O+="Student not registered in any course\n";
 						logger.info(O);
 						break;
+				case 3: logger.info("Student is Checking Current courses");
+						list=student.getCurrentCourses();
+						if(!list.isEmpty())
+						{	
+							for(int sc:list)
+							{
+								O+=sc+"\n";
+							}
+						}
+						else
+							O+="Student not registered in any course\n";
+						break;
+						
 				default:	O+="You have Entered wrong choice\n";
 							logger.info("(Student) "+O);
 							break;

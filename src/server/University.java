@@ -2,6 +2,7 @@ package server;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -31,6 +32,10 @@ public class University implements Serializable {
 	}
 
 	public String CreateCourse(String name, int code, int capsize) {
+		if(!ClerkAllowed)
+		{
+			return "Clerk's time to Create Course and student is over";
+		}
 		Course x;
 		Random rand = new Random();
 		int mid= rand.nextInt(3);
@@ -58,6 +63,8 @@ public class University implements Serializable {
 	}
 
 	public int CreateStudent(String name, boolean fullTime) {
+		if(!ClerkAllowed)
+			return -1;
 		counter++;
 		Student s = new Student(name, counter, fullTime);
 		students.put(counter,s);
@@ -77,22 +84,38 @@ public class University implements Serializable {
 	}
 	
 	public String RegisterStudent(int index, int st) {
-		Course course = courses.get(index);
-		if(course.isFull())
-			return "Course is Full";
-		Student s = students.get(st);
-		int n = s.getCurrentCourses().size();
-		if((s.isFullTime()&&!(n<config.MaxCourseforFT))||(!s.isFullTime()&&!(n<config.MaxCourseforPT)))
-			return "Student course limit reached";
-		if(s.RegisterCourses(course.CourseCode()))
-		{	
-			course.AddStudent(st);
-			return  "Successful";
+		if(index>=0&&index<courses.size())
+		{	if(st<0)
+			 return "Student doesn't exist";
+			if(!StudentAllowed)
+				return "Student ia not allowed";
+			if(Dropdeadline)
+				return "Registration deadline passed";
+			Course course = courses.get(index);
+			if(course.isFull())
+				return "Course is Full";
+			Student s = students.get(st);
+			int n = s.getCurrentCourses().size();
+			if((s.isFullTime()&&!(n<config.MaxCourseforFT))||(!s.isFullTime()&&!(n<config.MaxCourseforPT)))
+				return "Student course limit reached";
+			if(s.RegisterCourses(course.CourseCode()))
+			{	
+				course.AddStudent(st);
+				return  "Successful";
+			}
+			return "Already Registered";
 		}
-		return "Already Registered";
+		return "Course index out of bounds";
 	}
 
 	public String DeregisterStudent(int sno, int ccode) {
+		if(!StudentAllowed)
+			return "Student ia not allowed";
+		if(Dropdeadline)
+			return "Deregister deadline has passed";
+		if(sno<0)
+			 return "Student doesn't exist";
+			
 		Course c=null;
 		Iterator<Course> i = courses.iterator();
 		while(i.hasNext())
@@ -109,7 +132,7 @@ public class University implements Serializable {
 			 if(students.get(sno).DeRegisterCourses(ccode))
 			{
 				c.RemoveStudent(sno);
-				return "Successfully Deregistered";
+				return "Successful";
 			}
 			return "Student Not Registered";
 			
@@ -117,6 +140,11 @@ public class University implements Serializable {
 	}
 
 	public String Dropcourse(int sno, int ccode) {
+		if(!Dropdeadline)
+			return "Drop deadline has not reached";
+		if(sno<0)
+			 return "Student doesn't exist";
+			
 		Course c=null;
 		Iterator<Course> i = courses.iterator();
 		while(i.hasNext())
@@ -142,6 +170,8 @@ public class University implements Serializable {
 
 	
 	public boolean CancelCourse(int index) {
+		if(!(index>=0&&index<courses.size()))
+			return false;
 		Course course = courses.get(index);
 		Set<Integer> set= course.getStudents();
 		boolean flag=false;
@@ -159,9 +189,12 @@ public class University implements Serializable {
 		return flag;
 	}
 
-	public void DestroyCourse(int index) {
+	public boolean DestroyCourse(int index) {
 		CancelCourse(index);
+		if(!(index>=0&&index<courses.size()))
+			return false;
 		courses.remove(index);
+		return true;
 	}
 
 	public Student getStudent(int s) {
@@ -177,7 +210,29 @@ public class University implements Serializable {
 		return students.keySet();
 	}
 	
+	public int getStudentno(String name)
+	{
+		Collection<Student> st=students.values();
+		Student x=null;
+		for(Student o: st)
+		{	x=o;
+			if(o.getName().equalsIgnoreCase(name))
+				break;
+		}
+		if(x==null)
+			return -1;
+		Set<Integer> s=students.keySet();
+		for(int i:s)
+		{
+			if(students.get(i).equals(x))
+				return i;
+		}
+		return -1;
+		
+	}
 	public boolean DeleteStudent(int sno) {
+		if(!ClerkAllowed)
+			return false;
 		if(students.containsKey(sno))
 		{
 			Iterator<Course> i = courses.iterator();
@@ -189,6 +244,22 @@ public class University implements Serializable {
 			return true;
 		}
 		return false;
+	}
+	
+	public String getStudentCourses(int i)
+	{
+		String output="";
+		Student s = students.get(i);
+		List<Integer> scourses= s.getCurrentCourses();
+		if(scourses.isEmpty())
+		{
+			return "Student has no Registered Courses";
+		}
+		for(int x :scourses)
+		{
+			output+=x+"\n";
+		}
+		return output;
 	}
 
 	public boolean getClerkAllowed() {

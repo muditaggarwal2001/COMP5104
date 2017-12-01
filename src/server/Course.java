@@ -14,7 +14,7 @@ public class Course implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public static Logger logger = Trace.getInstance().getLogger(server.class);
+	public static Logger logger = Trace.getInstance().getLogger(Course.class);
 	private String title;
 	private int code;
 	protected boolean HasFinal ;
